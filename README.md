@@ -12,7 +12,7 @@ This is a single-player Wordle game implemented using HTML, CSS, and JavaScript.
 
 ## Installation
 
-1. Clone the repository: `git clone https://github.com/yourusername/wordle.git`
+1. Clone the repository: `git clone https://github.com/ellitraboulsi/wordle.git`
 2. Navigate to the project directory: `cd wordle`
 3. Open `index.html` in your web browser.
 
