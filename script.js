@@ -6,11 +6,13 @@ let currentAttempt = '';
 let attempts = [];
 
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM fully loaded and parsed');
     createBoard();
     createKeyboard();
 });
 
 function createBoard() {
+    console.log('Creating board');
     const board = document.getElementById('game-board');
     for (let i = 0; i < MAX_ATTEMPTS; i++) {
         for (let j = 0; j < WORD_LENGTH; j++) {
@@ -22,6 +24,7 @@ function createBoard() {
 }
 
 function createKeyboard() {
+    console.log('Creating keyboard');
     const keyboard = document.getElementById('keyboard');
     const keys = 'abcdefghijklmnopqrstuvwxyz'.split('');
     keys.forEach(key => {
@@ -34,6 +37,7 @@ function createKeyboard() {
 }
 
 function handleKeyPress(key) {
+    console.log(`Key pressed: ${key}`);
     if (currentAttempt.length < WORD_LENGTH) {
         currentAttempt += key;
         updateBoard();
@@ -46,6 +50,7 @@ function handleKeyPress(key) {
 }
 
 function updateBoard() {
+    console.log('Updating board');
     const board = document.getElementById('game-board');
     const tiles = board.querySelectorAll('.tile');
     tiles.forEach((tile, index) => {
@@ -65,6 +70,7 @@ function updateBoard() {
 }
 
 function checkAttempt() {
+    console.log(`Checking attempt: ${currentAttempt}`);
     attempts.push(currentAttempt);
     if (currentAttempt === secretWord) {
         alert('Congratulations! You guessed the word.');
@@ -76,6 +82,7 @@ function checkAttempt() {
 }
 
 function resetGame() {
+    console.log('Resetting game');
     attempts = [];
     currentAttempt = '';
     secretWord = words[Math.floor(Math.random() * words.length)];
