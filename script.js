@@ -1,7 +1,7 @@
 const WORD_LENGTH = 5;
 const MAX_ATTEMPTS = 6;
 const words = ['apple', 'berry', 'cherry', 'mango', 'grape'];
-const secretWord = words[Math.floor(Math.random() * words.length)];
+let secretWord = words[Math.floor(Math.random() * words.length)];
 let currentAttempt = '';
 let attempts = [];
 
