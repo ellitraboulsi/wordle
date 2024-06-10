@@ -1,0 +1,21 @@
+wordle/
+│
+├── docs/
+│   ├── design_system/
+│   │   ├── colors.png
+│   │   ├── fonts.png
+│   │   └── layout.png
+│   ├── design_system.md
+│   └── screenshots/
+│       ├── start_screen.png
+│       ├── in_game.png
+│       └── end_screen.png
+│
+├── src/
+│   ├── css/
+│   │   └── styles.css
+│   ├── js/
+│   │   └── script.js
+│   └── index.html
+│
+└── README.md
