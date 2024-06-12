@@ -13,13 +13,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function createBoard() {
     console.log('Creating board');
-    const board = document.getElementById('game-board');
-    for (let i = 0; i < MAX_ATTEMPTS; i++) {
-        for (let j = 0; j < WORD_LENGTH; j++) {
-            const tile = document.createElement('div');
-            tile.classList.add('tile');
-            board.appendChild(tile);
-        }
+    const board = document.getElementById('board');
+    for (let i = 0; i < 30; i++) {
+        let square = document.createElement('div');
+        square.classList.add("square");
+        square.setAttribute("id", i + 1);
+        board.appendChild(square);
     }
 }
 
