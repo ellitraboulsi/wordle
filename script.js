@@ -36,4 +36,55 @@ function createKeyboard() {
 }
 
 function handleKeyPress(key) {
-    console.log(`Key pressed: ${
+    console.log(`Key pressed: ${key}`);
+    if (currentAttempt.length < WORD_LENGTH) {
+        currentAttempt += key;
+        updateBoard();
+    }
+    if (currentAttempt.length === WORD_LENGTH) {
+        checkAttempt();
+        currentAttempt = '';
+        updateBoard();
+    }
+}
+
+function updateBoard() {
+    console.log('Updating board');
+    const board = document.getElementById('board');
+    const tiles = board.querySelectorAll('.tile');
+    tiles.forEach((tile, index) => {
+        const attemptIndex = Math.floor(index / WORD_LENGTH);
+        const charIndex = index % WORD_LENGTH;
+        tile.textContent = attempts[attemptIndex] ? attempts[attemptIndex][charIndex] : '';
+        tile.classList.remove('correct', 'present', 'absent');
+        if (attemptIndex < attempts.length) {
+            if (attempts[attemptIndex][charIndex] === secretWord[charIndex]) {
+                tile.classList.add('correct');
+            } else if (secretWord.includes(attempts[attemptIndex][charIndex])) {
+                tile.classList.add('present');
+            } else {
+                tile.classList.add('absent');
+            }
+        }
+    });
+}
+
+function checkAttempt() {
+    console.log(`Checking attempt: ${currentAttempt}`);
+    attempts.push(currentAttempt);
+    if (currentAttempt === secretWord) {
+        alert('Congratulations! You guessed the word.');
+        resetGame();
+    } else if (attempts.length === MAX_ATTEMPTS) {
+        alert(`Game over! The word was ${secretWord}.`);
+        resetGame();
+    }
+}
+
+function resetGame() {
+    console.log('Resetting game');
+    attempts = [];
+    currentAttempt = '';
+    secretWord = words[Math.floor(Math.random() * words.length)];
+    updateBoard();
+}
