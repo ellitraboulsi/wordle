@@ -7,8 +7,10 @@ let attempts = [];
 
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM fully loaded and parsed');
-    createBoard();
-    createKeyboard();
+        secretWord = words[Math.floor(Math.random() * words.length)];
+        createBoard();
+        createKeyboard();
+        document.addEventListener('keydown', handleKeyDown);
 });
 
 function createBoard() {
@@ -35,6 +37,21 @@ function createKeyboard() {
     });
 }
 
+function handleKeyDown(event) {
+    const key = event.key.toLowerCase();
+    if (key === 'backspace') {
+        event.preventDefault();
+        if (currentAttempt.length > 0) {
+            currentAttempt = currentAttempt.slice(0, -1);
+            updateBoard();
+        }
+    } else if (key.length > 1) {
+        event.preventDefault();
+    } else if (key >= 'a' && key <= 'z') {
+        handleKeyPress(key);
+    }
+}
+
 function handleKeyPress(key) {
     console.log(`Key pressed: ${key}`);
     if (currentAttempt.length < WORD_LENGTH) {
@@ -55,7 +72,11 @@ function updateBoard() {
     tiles.forEach((tile, index) => {
         const attemptIndex = Math.floor(index / WORD_LENGTH);
         const charIndex = index % WORD_LENGTH;
-        tile.textContent = attempts[attemptIndex] ? attempts[attemptIndex][charIndex] : '';
+        if (attemptIndex === attempts.length) {
+            tile.textContent = currentAttempt[charIndex] || '';
+        } else {
+            tile.textContent = attempts[attemptIndex] ? attempts[attemptIndex][charIndex] : '';
+        }
         tile.classList.remove('correct', 'present', 'absent');
         if (attemptIndex < attempts.length) {
             if (attempts[attemptIndex][charIndex] === secretWord[charIndex]) {
@@ -72,12 +93,17 @@ function updateBoard() {
 function checkAttempt() {
     console.log(`Checking attempt: ${currentAttempt}`);
     attempts.push(currentAttempt);
+    updateBoard();
     if (currentAttempt === secretWord) {
-        alert('Congratulations! You guessed the word.');
-        resetGame();
+        setTimeout(() => {
+            alert('Congratulations! You guessed the word.');
+            resetGame();
+        }, 500); //delay to show win for dopamine
     } else if (attempts.length === MAX_ATTEMPTS) {
-        alert(`Game over! The word was ${secretWord}.`);
-        resetGame();
+        setTimeout(() => {
+            alert(`Game over! The word was ${secretWord}.`);
+            resetGame();
+        }, 500); //delay to show loss   
     }
 }
 
