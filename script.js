@@ -27,7 +27,7 @@ function createBoard() {
 function createKeyboard() {
     console.log('Creating keyboard');
     const keyboard = document.getElementById('keyboard');
-    const keys = 'abcdefghijklmnopqrstuvwxyz'.split('');
+    const keys = 'qwertyuiopasdfghjklzxcvbnm'.split('');
     keys.forEach(key => {
         const keyElement = document.createElement('button');
         keyElement.classList.add('key');
