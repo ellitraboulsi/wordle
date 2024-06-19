@@ -5,6 +5,7 @@ This is a single-player Wordle game implemented using HTML, CSS, and JavaScript.
 ## How to Play
 
 - Guess the 5-letter word within 6 attempts.
+- You can guess any combination of 6 letters, it does not have to be a word in the english language.
 - After each guess, the color of the tiles will change to show how close your guess was to the word.
   - Green: Correct letter in the correct position.
   - Yellow: Correct letter in the wrong position.
