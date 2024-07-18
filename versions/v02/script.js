@@ -22,14 +22,15 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(fetchLeaderboard);
     }
 
-    function updateGameState(state) {
-        if (state.error) {
-            alert(state.error);
-            return;
-        }
-
-        updateBoard(state.word, state.guessed_letters);
+function updateGameState(state) {
+    if (state.error) {
+        alert(state.error);
+        return;
     }
+
+    updateBoard(state.word, state.guessed_letters, state.letter_states);
+}
+
 
 function updateBoard(displayWord, guessedLetters, letterStates) {
     board.innerHTML = '';
