@@ -17,11 +17,10 @@ body {
 #board {
     display: grid;
     grid-template-columns: repeat(5, 40px);  
-    grid-template-rows: repeat(6, 40px);     
+    grid-template-rows: repeat(6, 40px);    
     grid-gap: 5px;
     margin-bottom: 20px;
 }
-
 
 .square {
     width: 40px;
@@ -77,6 +76,6 @@ body {
 }
 
 #leaderboard-list {
-    list-style: none;
+    list-style-type: none;
     padding: 0;
 }
