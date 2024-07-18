@@ -6,22 +6,15 @@ document.addEventListener('DOMContentLoaded', () => {
     startButton.addEventListener('click', startGame);
 
     function startGame() {
-        startButton.style.display = 'none';  // Hide the start button
         fetch('game.php?action=start')
             .then(response => response.json())
-            .then(state => {
-                updateGameState(state);
-                fetchLeaderboard(); // Fetch and display the leaderboard after starting the game
-            });
+            .then(updateGameState);
     }
 
     function handleKeyPress(key) {
-        fetch(`game.php?action=guess&letter=${key}`)
+        fetch(game.php?action=guess&letter=${key})
             .then(response => response.json())
-            .then(state => {
-                updateGameState(state);
-                fetchLeaderboard(); // Fetch and display the leaderboard after each guess
-            });
+            .then(updateGameState);
     }
 
     function updateGameState(state) {
@@ -30,24 +23,16 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        updateBoard(state.word, state.guessed_letters, state.letter_states);
+        updateBoard(state.word, state.guessed_letters);
+
     }
 
-    function updateBoard(displayWord, guessedLetters, letterStates) {
+    function updateBoard(displayWord, guessedLetters) {
         board.innerHTML = '';
         for (let i = 0; i < displayWord.length; i++) {
             let square = document.createElement('div');
             square.classList.add('square', 'tile');
             square.textContent = displayWord[i] === '_' ? '' : displayWord[i];
-
-            if (letterStates[i] === 'correct') {
-                square.classList.add('correct');
-            } else if (letterStates[i] === 'present') {
-                square.classList.add('present');
-            } else {
-                square.classList.add('absent');
-            }
-
             board.appendChild(square);
         }
 
@@ -62,22 +47,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 keyElement.addEventListener('click', () => handleKeyPress(key.toLowerCase()));
             }
             keyboard.appendChild(keyElement);
-        });
-    }
-
-    function fetchLeaderboard() {
-        fetch('game.php?action=leaderboard')
-            .then(response => response.json())
-            .then(updateLeaderboard);
-    }
-
-    function updateLeaderboard(leaderboard) {
-        const leaderboardList = document.getElementById('leaderboard-list');
-        leaderboardList.innerHTML = '';
-        leaderboard.forEach((score, index) => {
-            const listItem = document.createElement('li');
-            listItem.textContent = `${index + 1}. ${score}`;
-            leaderboardList.appendChild(listItem);
         });
     }
 });
