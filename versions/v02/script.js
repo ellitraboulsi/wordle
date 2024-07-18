@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     startButton.addEventListener('click', startGame);
 
     function startGame() {
-        startButton.style.display = 'none';  // Hide the start button
+        startButton.style.display = 'none'; 
         fetch('game.php?action=start')
             .then(response => response.json())
             .then(updateGameState)
@@ -31,28 +31,37 @@ document.addEventListener('DOMContentLoaded', () => {
         updateBoard(state.word, state.guessed_letters);
     }
 
-    function updateBoard(displayWord, guessedLetters) {
-        board.innerHTML = '';
-        for (let i = 0; i < displayWord.length; i++) {
-            let square = document.createElement('div');
-            square.classList.add('square', 'tile');
-            square.textContent = displayWord[i] === '_' ? '' : displayWord[i];
-            board.appendChild(square);
+function updateBoard(displayWord, guessedLetters, letterStates) {
+    board.innerHTML = '';
+    for (let i = 0; i < displayWord.length; i++) {
+        let square = document.createElement('div');
+        square.classList.add('square', 'tile');
+        square.textContent = displayWord[i] === '_' ? '' : displayWord[i];
+
+        if (letterStates[i] === 'correct') {
+            square.classList.add('correct');
+        } else if (letterStates[i] === 'present') {
+            square.classList.add('present');
+        } else {
+            square.classList.add('absent');
         }
 
-        keyboard.innerHTML = '';
-        'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(key => {
-            const keyElement = document.createElement('button');
-            keyElement.classList.add('key');
-            keyElement.textContent = key;
-            if (guessedLetters.includes(key.toLowerCase())) {
-                keyElement.disabled = true;
-            } else {
-                keyElement.addEventListener('click', () => handleKeyPress(key.toLowerCase()));
-            }
-            keyboard.appendChild(keyElement);
-        });
+        board.appendChild(square);
     }
+
+    keyboard.innerHTML = '';
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(key => {
+        const keyElement = document.createElement('button');
+        keyElement.classList.add('key');
+        keyElement.textContent = key;
+        if (guessedLetters.includes(key.toLowerCase())) {
+            keyElement.disabled = true;
+        } else {
+            keyElement.addEventListener('click', () => handleKeyPress(key.toLowerCase()));
+        }
+        keyboard.appendChild(keyElement);
+    });
+}
 
     function fetchLeaderboard() {
         fetch('game.php?action=leaderboard')
