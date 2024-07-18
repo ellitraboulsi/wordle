@@ -33,7 +33,6 @@ function guess($letter) {
     return get_state();
 }
 
-
 function get_state() {
     if (!isset($_SESSION['word']) || !isset($_SESSION['guesses'])) {
         return ['error' => 'No game in progress'];
@@ -45,21 +44,22 @@ function get_state() {
     $display_word = '';
     $letter_states = [];
 
-    foreach (str_split($word) as $letter) {
+    foreach (str_split($word) as $index => $letter) {
         if (in_array($letter, $guessed_letters)) {
             $display_word .= $letter;
-            $letter_states[] = 'correct';
+            $letter_states[$index] = 'correct';
         } else {
             $display_word .= '_';
-            $letter_states[] = 'absent';
+            $letter_states[$index] = 'absent';
         }
     }
 
-    foreach ($guessed_letters as $letter) {
-        if (strpos($word, $letter) !== false && !in_array($letter, $letter_states)) {
-            $key = array_search($letter, str_split($word));
-            if ($key !== false) {
-                $letter_states[$key] = 'present';
+    foreach ($guessed_letters as $guessed_letter) {
+        if (strpos($word, $guessed_letter) !== false) {
+            foreach (str_split($word) as $index => $letter) {
+                if ($letter === $guessed_letter && $letter_states[$index] !== 'correct') {
+                    $letter_states[$index] = 'present';
+                }
             }
         }
     }
@@ -76,7 +76,6 @@ function get_state() {
         'score' => $_SESSION['score']
     ];
 }
-
 
 function update_leaderboard($score) {
     if (!isset($_SESSION['leaderboard'])) {
