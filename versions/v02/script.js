@@ -7,11 +7,13 @@ document.addEventListener('DOMContentLoaded', () => {
     startButton.addEventListener('click', startGame);
 
     function startGame() {
+        startButton.style.display = 'none';  // Hide the start button
         fetch('game.php?action=start')
             .then(response => response.json())
             .then(updateGameState)
             .then(fetchLeaderboard);
     }
+
 
     function handleKeyPress(key) {
         fetch(`game.php?action=guess&letter=${key}`)
