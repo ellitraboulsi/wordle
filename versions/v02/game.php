@@ -27,11 +27,12 @@ function guess($letter) {
     $_SESSION['guesses']--;
 
     if (strpos($_SESSION['word'], $letter) !== false) {
-        $_SESSION['score'] += 10;
+        $_SESSION['score'] += 10;  // Increment score only for correct guesses
     }
 
     return get_state();
 }
+
 
 function get_state() {
     if (!isset($_SESSION['word']) || !isset($_SESSION['guesses'])) {
