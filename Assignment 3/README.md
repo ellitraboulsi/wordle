@@ -18,7 +18,7 @@ This is a Wordle game implemented with HTML, CSS, JavaScript, and a PHP server c
 ![Game Over](Screenshots/end.webp)
 
 ## Installation
-1. Clone the repository: `git clone ellitraboulsi/wordle`
+1. Clone the repository
 2. Ensure you have a PHP server running.
 3. Open `index.html` in your browser to start the game.
 
