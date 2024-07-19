@@ -13,9 +13,9 @@ This is a Wordle game implemented with HTML, CSS, JavaScript, and a PHP server c
 - The top 10 scores are displayed in the leaderboard section.
 
 ## Screenshots
-![Game Start](screenshots/start.webp)
-![In Progress](screenshots/during.webp)
-![Game Over](screenshots/end.webp)
+![Game Start](Screenshots/start.webp)
+![In Progress](Screenshots/during.webp)
+![Game Over](Screenshots/end.webp)
 
 ## Installation
 1. Clone the repository: `git clone ellitraboulsi/wordle`
