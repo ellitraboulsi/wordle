@@ -8,15 +8,14 @@ This is a Wordle game implemented with HTML, CSS, JavaScript, and a PHP server c
 2. Use the on-screen keyboard to guess letters in the hidden word.
 3. You have 6 guesses to find the word.
 4. Correct letters will be revealed in the word, while incorrect letters will reduce your remaining guesses.
-5. Your score increases by 10 points for each correct letter guessed.
 
 ## Leaderboard
 - The top 10 scores are displayed in the leaderboard section.
 
 ## Screenshots
-![Game Start](screenshots/game-start.png)
-![In Progress](screenshots/in-progress.png)
-![Game Over](screenshots/game-over.png)
+![Game Start](screenshots/start.webp)
+![In Progress](screenshots/during.webp)
+![Game Over](screenshots/end.webp)
 
 ## Installation
 1. Clone the repository: `git clone ellitraboulsi/wordle`
