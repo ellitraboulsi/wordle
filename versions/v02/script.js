@@ -2,26 +2,41 @@ document.addEventListener('DOMContentLoaded', () => {
     const startButton = document.getElementById('start-game');
     const board = document.getElementById('board');
     const keyboard = document.getElementById('keyboard');
+    const leaderboardList = document.getElementById('leaderboard-list');
 
     startButton.addEventListener('click', startGame);
 
     function startGame() {
         startButton.style.display = 'none';  // Hide the start button
-        fetch('game.php?action=start')
-            .then(response => response.json())
-            .then(state => {
-                updateGameState(state);
-                fetchLeaderboard(); // Fetch and display the leaderboard after starting the game
-            });
+        fetch('game.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({action: 'start'})
+        })
+        .then(response => response.json())
+        .then(state => {
+            updateGameState(state);
+            fetchLeaderboard(); // Fetch and display the leaderboard after starting the game
+        })
+        .catch(error => console.error('Error starting game:', error));
     }
 
     function handleKeyPress(key) {
-        fetch(`game.php?action=guess&letter=${key}`)
-            .then(response => response.json())
-            .then(state => {
-                updateGameState(state);
-                fetchLeaderboard(); // Fetch and display the leaderboard after each guess
-            });
+        fetch('game.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({guess: key})
+        })
+        .then(response => response.json())
+        .then(state => {
+            updateGameState(state);
+            fetchLeaderboard(); // Fetch and display the leaderboard after each guess
+        })
+        .catch(error => console.error('Error handling key press:', error));
     }
 
     function updateGameState(state) {
@@ -30,53 +45,51 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        updateBoard(state.word, state.guessed_letters, state.letter_states);
+        updateBoard(state.attempts);
     }
 
-    function updateBoard(displayWord, guessedLetters, letterStates) {
+    function updateBoard(attempts) {
         board.innerHTML = '';
-        for (let i = 0; i < displayWord.length; i++) {
-            let square = document.createElement('div');
-            square.classList.add('square', 'tile');
-            square.textContent = displayWord[i] === '_' ? '' : displayWord[i];
-
-            if (letterStates[i] === 'correct') {
-                square.classList.add('correct');
-            } else if (letterStates[i] === 'present') {
-                square.classList.add('present');
-            } else {
-                square.classList.add('absent');
-            }
-
-            board.appendChild(square);
-        }
+        attempts.forEach(attempt => {
+            const row = document.createElement('div');
+            row.classList.add('row');
+            attempt.result.forEach((status, i) => {
+                const square = document.createElement('div');
+                square.classList.add('square', status);
+                square.textContent = attempt.guess[i];
+                row.appendChild(square);
+            });
+            board.appendChild(row);
+        });
 
         keyboard.innerHTML = '';
         'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(key => {
             const keyElement = document.createElement('button');
             keyElement.classList.add('key');
             keyElement.textContent = key;
-            if (guessedLetters.includes(key.toLowerCase())) {
-                keyElement.disabled = true;
-            } else {
-                keyElement.addEventListener('click', () => handleKeyPress(key.toLowerCase()));
-            }
+            keyElement.addEventListener('click', () => handleKeyPress(key.toLowerCase()));
             keyboard.appendChild(keyElement);
         });
     }
 
     function fetchLeaderboard() {
-        fetch('game.php?action=leaderboard')
-            .then(response => response.json())
-            .then(updateLeaderboard);
+        fetch('game.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({action: 'leaderboard'})
+        })
+        .then(response => response.json())
+        .then(updateLeaderboard)
+        .catch(error => console.error('Error fetching leaderboard:', error));
     }
 
     function updateLeaderboard(leaderboard) {
-        const leaderboardList = document.getElementById('leaderboard-list');
         leaderboardList.innerHTML = '';
-        leaderboard.forEach((score, index) => {
+        leaderboard.forEach((entry, index) => {
             const listItem = document.createElement('li');
-            listItem.textContent = `${index + 1}. ${score}`;
+            listItem.textContent = `${index + 1}. Word: ${entry.word}, Score: ${entry.score}`;
             leaderboardList.appendChild(listItem);
         });
     }
