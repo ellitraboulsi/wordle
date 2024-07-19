@@ -2,18 +2,22 @@
 session_start();
 
 $words = ['apple', 'berry', 'stare', 'mango', 'grape'];
+$leaderboardFile = 'leaderboard.json';
+
+// Load leaderboard from file
+if (file_exists($leaderboardFile)) {
+    $leaderboard = json_decode(file_get_contents($leaderboardFile), true);
+} else {
+    $leaderboard = [];
+}
 
 if (!isset($_SESSION['secret_word'])) {
     $_SESSION['secret_word'] = $words[array_rand($words)];
     $_SESSION['attempts'] = [];
-    if (!isset($_SESSION['leaderboard'])) {
-        $_SESSION['leaderboard'] = [];
-    }
 }
 
 $secret_word = $_SESSION['secret_word'];
 $attempts = $_SESSION['attempts'];
-$leaderboard = $_SESSION['leaderboard'];
 
 function checkWord($attempt, $secret_word) {
     $result = [];
@@ -35,7 +39,6 @@ function updateLeaderboard(&$leaderboard, $word, $score) {
         return $b['score'] - $a['score'];
     });
     $leaderboard = array_slice($leaderboard, 0, 10);
-    $_SESSION['leaderboard'] = $leaderboard;  // Ensure the updated leaderboard is stored in the session
 }
 
 $response = ['status' => '', 'attempts' => $attempts, 'leaderboard' => $leaderboard];
@@ -50,6 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($guess === $secret_word) {
             $remaining_attempts = 6 - count($attempts);
             updateLeaderboard($leaderboard, $secret_word, $remaining_attempts);
+            file_put_contents($leaderboardFile, json_encode($leaderboard)); // Save leaderboard to file
             $response['status'] = 'won';
             $response['secret_word'] = $secret_word;
             session_destroy();
@@ -67,6 +71,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $response['attempts'] = $attempts;
-$response['leaderboard'] = $_SESSION['leaderboard']; // Return the leaderboard from the session
+$response['leaderboard'] = $leaderboard; // Return the leaderboard from the session
 echo json_encode($response);
 ?>

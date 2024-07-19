@@ -97,7 +97,6 @@ function updateBoard() {
         .catch(error => console.error('Error:', error));
 }
 
-
 function checkAttempt() {
     console.log(`Checking attempt: ${currentAttempt}`);
     fetch('game.php', {
@@ -127,6 +126,7 @@ function checkAttempt() {
 
 function updateLeaderboard(leaderboard) {
     const leaderboardList = document.getElementById('leaderboard-list');
+    leaderboardList.innerHTML = ''; // Clear the leaderboard before updating
     leaderboard.forEach(entry => {
         const listItem = document.createElement('li');
         listItem.textContent = `Word: ${entry.word}, Score: ${entry.score}`;
