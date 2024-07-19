@@ -1,6 +1,7 @@
 <?php
 session_start();
 
+<<<<<<< HEAD
 $words = ['apple', 'berry', 'stare', 'mango', 'grape'];
 $leaderboardFile = 'leaderboard.json';
 
@@ -10,6 +11,9 @@ if (file_exists($leaderboardFile)) {
 } else {
     $leaderboard = [];
 }
+=======
+$words = ['apple', 'berry', 'stare', 'mango', 'grape', 'bread', 'crane', 'stare', 'cloud', 'pinky', 'store', 'chart'];
+>>>>>>> 00519c8f1cf49ab5513f7009783ef1922be587e4
 
 if (!isset($_SESSION['secret_word'])) {
     $_SESSION['secret_word'] = $words[array_rand($words)];

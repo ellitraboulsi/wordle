@@ -10,14 +10,12 @@ body {
 
 #game {
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
 }
 
 #board {
     display: grid;
-    grid-template-columns: repeat(5, 40px);  
-    grid-template-rows: repeat(6, 40px);    
+    grid-template-columns: repeat(5, 40px);
     grid-gap: 5px;
     margin-bottom: 20px;
 }
@@ -54,6 +52,7 @@ body {
     flex-wrap: wrap;
     max-width: 220px;
     justify-content: center;
+    margin-right: 20px;
 }
 
 .key {
@@ -71,11 +70,19 @@ body {
 }
 
 #leaderboard {
-    margin-top: 20px;
-    text-align: center;
+    margin-left: 20px;
 }
 
-#leaderboard-list {
+#leaderboard h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+#leaderboard ul {
     list-style-type: none;
     padding: 0;
+}
+
+#leaderboard li {
+    margin-bottom: 5px;
 }

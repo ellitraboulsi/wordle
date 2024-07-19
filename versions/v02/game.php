@@ -1,117 +1,72 @@
 <?php
 session_start();
 
-function start() {
-    $words = ['apple', 'berry', 'stare', 'mango', 'grape'];
-    $word = $words[array_rand($words)];
-    $_SESSION['word'] = $word;
-    $_SESSION['guesses'] = 6;
-    $_SESSION['guessed_letters'] = [];
-    $_SESSION['score'] = 0;
-}
+$words = ['apple', 'berry', 'stare', 'mango', 'grape', 'bread', 'crane', 'stare', 'cloud', 'pinky', 'store', 'chart'];
 
-function guess($letter) {
-    if (!isset($_SESSION['word']) || !isset($_SESSION['guesses'])) {
-        return ['error' => 'No game in progress'];
-    }
-
-    if ($_SESSION['guesses'] <= 0) {
-        return ['error' => 'No guesses remaining'];
-    }
-
-    if (in_array($letter, $_SESSION['guessed_letters'])) {
-        return ['error' => 'Letter already guessed'];
-    }
-
-    $_SESSION['guessed_letters'][] = $letter;
-    $_SESSION['guesses']--;
-
-    if (strpos($_SESSION['word'], $letter) !== false) {
-        $_SESSION['score'] += 10;  // Increment score only for correct guesses
-    }
-
-    return get_state();
-}
-
-function get_state() {
-    if (!isset($_SESSION['word']) || !isset($_SESSION['guesses'])) {
-        return ['error' => 'No game in progress'];
-    }
-
-    $word = $_SESSION['word'];
-    $guessed_letters = $_SESSION['guessed_letters'];
-    $remaining_guesses = $_SESSION['guesses'];
-    $display_word = '';
-    $letter_states = [];
-
-    foreach (str_split($word) as $index => $letter) {
-        if (in_array($letter, $guessed_letters)) {
-            $display_word .= $letter;
-            $letter_states[$index] = 'correct';
-        } else {
-            $display_word .= '_';
-            $letter_states[$index] = 'absent';
-        }
-    }
-
-    foreach ($guessed_letters as $guessed_letter) {
-        if (strpos($word, $guessed_letter) !== false) {
-            foreach (str_split($word) as $index => $letter) {
-                if ($letter === $guessed_letter && $letter_states[$index] !== 'correct') {
-                    $letter_states[$index] = 'present';
-                }
-            }
-        }
-    }
-
-    if ($display_word == $word) {
-        update_leaderboard($_SESSION['score']);
-    }
-
-    return [
-        'word' => $display_word,
-        'remaining_guesses' => $remaining_guesses,
-        'guessed_letters' => $guessed_letters,
-        'letter_states' => $letter_states,
-        'score' => $_SESSION['score']
-    ];
-}
-
-function update_leaderboard($score) {
+if (!isset($_SESSION['secret_word'])) {
+    $_SESSION['secret_word'] = $words[array_rand($words)];
+    $_SESSION['attempts'] = [];
     if (!isset($_SESSION['leaderboard'])) {
         $_SESSION['leaderboard'] = [];
     }
-
-    $_SESSION['leaderboard'][] = $score;
-    rsort($_SESSION['leaderboard']);
-    $_SESSION['leaderboard'] = array_slice($_SESSION['leaderboard'], 0, 10);
 }
 
-function get_leaderboard() {
-    return isset($_SESSION['leaderboard']) ? $_SESSION['leaderboard'] : [];
-}
+$secret_word = $_SESSION['secret_word'];
+$attempts = $_SESSION['attempts'];
+$leaderboard = $_SESSION['leaderboard'];
 
-$action = $_GET['action'] ?? '';
-$response = ['error' => 'Invalid action'];
-
-switch ($action) {
-    case 'start':
-        start();
-        $response = get_state();
-        break;
-    case 'guess':
-        if (isset($_GET['letter'])) {
-            $response = guess($_GET['letter']);
+function checkWord($attempt, $secret_word) {
+    $result = [];
+    for ($i = 0; $i < strlen($attempt); $i++) {
+        if ($attempt[$i] === $secret_word[$i]) {
+            $result[] = 'correct';
+        } elseif (strpos($secret_word, $attempt[$i]) !== false) {
+            $result[] = 'present';
+        } else {
+            $result[] = 'absent';
         }
-        break;
-    case 'state':
-        $response = get_state();
-        break;
-    case 'leaderboard':
-        $response = get_leaderboard();
-        break;
+    }
+    return $result;
 }
 
-header('Content-Type: application/json');
+function updateLeaderboard(&$leaderboard, $word, $score) {
+    $leaderboard[] = ['word' => $word, 'score' => $score];
+    usort($leaderboard, function ($a, $b) {
+        return $b['score'] - $a['score'];
+    });
+    $leaderboard = array_slice($leaderboard, 0, 10);
+    $_SESSION['leaderboard'] = $leaderboard;  // Ensure the updated leaderboard is stored in the session
+}
+
+$response = ['status' => '', 'attempts' => $attempts, 'leaderboard' => $leaderboard];
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $input = json_decode(file_get_contents('php://input'), true);
+    if (isset($input['guess']) && strlen($input['guess']) === 5) {
+        $guess = strtolower($input['guess']);
+        $attempts[] = ['guess' => $guess, 'result' => checkWord($guess, $secret_word)];
+        $_SESSION['attempts'] = $attempts;
+
+        if ($guess === $secret_word) {
+            $remaining_attempts = 6 - count($attempts);
+            updateLeaderboard($leaderboard, $secret_word, $remaining_attempts);
+            $response['status'] = 'won';
+            $response['secret_word'] = $secret_word;
+            session_destroy();
+        } elseif (count($attempts) >= 6) {
+            $response['status'] = 'lost';
+            $response['secret_word'] = $secret_word;
+            session_destroy();
+        } else {
+            $response['status'] = 'ongoing';
+        }
+    } else {
+        $response['status'] = 'error';
+        $response['message'] = 'Invalid guess';
+    }
+}
+
+$response['attempts'] = $attempts;
+$response['leaderboard'] = $_SESSION['leaderboard']; // Return the leaderboard from the session
 echo json_encode($response);
 ?>
