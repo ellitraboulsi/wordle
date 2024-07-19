@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-$words = ['apple', 'berry', 'stare', 'mango', 'grape'];
+$words = ['apple', 'berry', 'stare', 'mango', 'grape', 'bread', 'crane', 'stare', 'cloud', 'pinky', 'store', 'chart'];
 
 if (!isset($_SESSION['secret_word'])) {
     $_SESSION['secret_word'] = $words[array_rand($words)];
