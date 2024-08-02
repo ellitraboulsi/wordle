@@ -64,7 +64,7 @@ $password = 'your_password';
 - The main table displays all patients, sorted by severity and wait time.
 
 ### Contact
-If you have any questions or need further assistance, please contact etrab069@uottawa.ca or __.
+If you have any questions or need further assistance, please contact etrab069@uottawa.ca.
 ______________________________________________
 
 This README provides an overview of the project, instructions for setup and usage. Be sure to replace placeholders like yourusername, your_host, your_dbname, your_username, your_password, and yourname@example.com with your actual information.
