@@ -1,7 +1,32 @@
+const WORD_LENGTH = 5;
+const MAX_ATTEMPTS = 6;
+const words = ['apple', 'berry', 'stare', 'mango', 'grape'];
+let secretWord = words[Math.floor(Math.random() * words.length)];
+let currentAttempt = '';
+let attempts = [];
+
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM fully loaded and parsed');
+        secretWord = words[Math.floor(Math.random() * words.length)];
+        createBoard();
+        createKeyboard();
+        document.addEventListener('keydown', handleKeyDown);
+});
+
+function createBoard() {
+    console.log('Creating board');
+    const board = document.getElementById('board');
+    for (let i = 0; i < WORD_LENGTH * MAX_ATTEMPTS; i++) {
+        let square = document.createElement('div');
+        square.classList.add('square', 'tile');
+        square.setAttribute('id', i + 1);
+        board.appendChild(square);
+    }
+}
 function createKeyboard() {
     console.log('Creating keyboard');
     const keyboard = document.getElementById('keyboard');
-    const keys = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+    const keys = 'abcdefghijklmnopqrstuvwxyz'.split('');
     keys.forEach(key => {
         const keyElement = document.createElement('button');
         keyElement.classList.add('key');
@@ -10,6 +35,7 @@ function createKeyboard() {
         keyboard.appendChild(keyElement);
     });
 }
+
 function handleKeyDown(event) {
     const key = event.key.toLowerCase();
     if (key === 'backspace') {
@@ -24,6 +50,7 @@ function handleKeyDown(event) {
         handleKeyPress(key);
     }
 }
+
 function handleKeyPress(key) {
     console.log(`Key pressed: ${key}`);
     if (currentAttempt.length < WORD_LENGTH) {
@@ -76,6 +103,7 @@ function checkAttempt() {
         }, 500); //delay to show loss   
     }
 }
+
 function resetGame() {
     console.log('Resetting game');
     attempts = [];
