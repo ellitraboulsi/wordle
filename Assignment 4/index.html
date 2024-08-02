@@ -9,12 +9,18 @@
 <body>
     <h1>Hospital Triage System</h1>
 
-    <div id="add-patient">
+    <div id="admin-section">
+        <h2>Add Patient</h2>
+        <input type="text" id="patient-name" placeholder="Patient Name">
+        <input type="text" id="severity" placeholder="Severity (low, medium, high)">
+        <input type="number" id="wait-time" placeholder="Wait Time (minutes)">
         <button id="add-patient-button">Add Patient</button>
     </div>
 
-    <div id="check-status">
-        <input type="text" id="patient-name" placeholder="Enter patient name">
+    <div id="user-section">
+        <h2>Check Patient Status</h2>
+        <input type="text" id="user-name" placeholder="Enter your name">
+        <input type="text" id="user-code" placeholder="Enter your 3-letter code">
         <button id="check-status-button">Check Status</button>
         <p id="status-result"></p>
     </div>
@@ -26,7 +32,6 @@
                 <th>Name</th>
                 <th>Severity</th>
                 <th>Wait Time (min)</th>
-                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
