@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital Triage Application</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <h1>Hospital Triage System</h1>
+
+    <div id="add-patient">
+        <button id="add-patient-button">Add Patient</button>
+    </div>
+
+    <div id="check-status">
+        <input type="text" id="patient-name" placeholder="Enter patient name">
+        <button id="check-status-button">Check Status</button>
+        <p id="status-result"></p>
+    </div>
+
+    <h2>Current Patients</h2>
+    <table id="patient-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Severity</th>
+                <th>Wait Time (min)</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Patient rows will be inserted here by JavaScript -->
+        </tbody>
+    </table>
+
+    <script src="js/scripts.js"></script>
+</body>
+</html>
